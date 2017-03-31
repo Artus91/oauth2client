@@ -1525,6 +1525,20 @@ def _require_crypto_or_die():
     if not HAS_CRYPTO:
         raise CryptoUnavailableError('No crypto library available')
 
+@_helpers.positional(2)
+def verify_id_token_ignore_time(id_token, audience, http=None,
+                    cert_uri=ID_TOKEN_VERIFICATION_CERTS):
+    _require_crypto_or_die()
+    if http is None:
+        http = transport.get_cached_http()
+
+    resp, content = transport.request(http, cert_uri)
+    if resp.status == http_client.OK:
+        certs = json.loads(_helpers._from_bytes(content))
+        return crypt.verify_signed_jwt_with_certs(id_token, certs, audience, ignore_time=True)
+    else:
+        raise VerifyJwtTokenError('Status code: {0}'.format(resp.status))
+
 
 @_helpers.positional(2)
 def verify_id_token(id_token, audience, http=None,

@@ -204,7 +204,7 @@ def _verify_time_range(payload_dict):
             now, latest, payload_dict))
 
 
-def verify_signed_jwt_with_certs(jwt, certs, audience=None):
+def verify_signed_jwt_with_certs(jwt, certs, audience=None, ignore_time = False):
     """Verify a JWT against public certs.
 
     See http://self-issued.info/docs/draft-jones-json-web-token.html.
@@ -242,7 +242,8 @@ def verify_signed_jwt_with_certs(jwt, certs, audience=None):
     _verify_signature(message_to_sign, signature, certs.values())
 
     # Verify the issued at and created times in the payload.
-    _verify_time_range(payload_dict)
+    if not ignore_time:
+        _verify_time_range(payload_dict)
 
     # Check audience.
     _check_audience(payload_dict, audience)
