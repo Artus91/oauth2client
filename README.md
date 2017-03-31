@@ -10,7 +10,9 @@ Installation
 To install, simply run the following command in your terminal:
 
 ```bash
-$ pip install --upgrade oauth2client
+# At first change version by oauth2client/__init__.py
+$ python setup.py build
+$ pip install --upgrade file:///path/oauth2client
 ```
 
 Contributing
